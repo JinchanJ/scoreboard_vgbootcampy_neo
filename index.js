@@ -67,7 +67,7 @@
                 ${player.team ? player.team.toUpperCase() : ""}
               </span>
               ${player.name ? player.name.toUpperCase() : ""}
-              ${team.losers ? "[L]" : ""}
+              ${team.losers ? "(L)" : ""}
             `
           );
 
