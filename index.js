@@ -156,7 +156,6 @@ LoadEverything().then(() => {
     );
     let element = document.querySelector(`.p${t + 1} .sponsor_container`);
     let width = parseFloat(window.getComputedStyle(element).width);
-    console.log("The width is " + width);
     let styleSheet = document.styleSheets[1];
     if (!width) {
       if (t == 0) {
@@ -365,10 +364,8 @@ LoadEverything().then(() => {
   async function UpdateColor(t) {
     let styleSheet = document.styleSheets[1];
 
-    // Get the div element by class name
     var divs = document.getElementsByClassName(`p${t + 1} container`);
 
-    // Assuming there's only one div with the class "myDiv", you can directly access it
     var div = divs[0];
 
     var inner_container = div.querySelector(".inner_container");
@@ -394,17 +391,9 @@ LoadEverything().then(() => {
       var green = parseInt(components[2]);
       var blue = parseInt(components[3]);
 
-      // Display the color
-      console.log("The background color of the div is: " + color);
-      console.log("Red: " + red);
-      console.log("Green: " + green);
-      console.log("Blue: " + blue);
-
       const intensity = red * 0.299 + green * 0.587 + blue * 0.114;
-      console.log("The intensity is: " + intensity);
 
       if (intensity > 142) {
-        console.log("Word should be black");
 
         // Change the text color
         score_element.style.color = "rgb(18, 18, 18, 0.8)";
@@ -414,7 +403,6 @@ LoadEverything().then(() => {
         inner_container.style.backgroundColor = "rgba(18, 18, 18, 0.8)";
 
       } else if (intensity > 95) {
-        console.log("In the middle");
 
         // Change the text color
         score_element.style.color = "white";
@@ -424,7 +412,6 @@ LoadEverything().then(() => {
         inner_container.style.backgroundColor = "rgba(18, 18, 18, 0.8)";
 
       } else if (intensity <= 80) {
-        console.log("Word should be white.");
 
         // Change the text color
         score_element.style.color = "white";
