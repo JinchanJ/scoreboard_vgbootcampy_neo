@@ -221,6 +221,7 @@ body {
 .twitter {
   color: var(--text-color);
   font-size: 22px;
+  overflow: hidden;
 }
 
 .twitter_logo {
