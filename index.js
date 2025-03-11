@@ -12,6 +12,11 @@ LoadEverything().then(() => {
   let savedMatch = "";
   let firstTime = true;
   let intervalID = "";
+  let playerInWinners = "";
+  let player1 = "";
+  let player2 = "";
+  let team1Losers = false;
+  let team2Losers = false;
 
   let startingAnimation = gsap
     .timeline({ paused: true })
@@ -77,20 +82,7 @@ LoadEverything().then(() => {
         if (player) {
 
           if (Object.keys(team.player).length == 1) {
-            SetInnerHtml(
-              $(`.p${t + 1}.container .name`),
-              `
-              <span>
-                <span class="sponsor">
-                  ${player.team ? player.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
-                </span>
-                ${
-                  player.name ? await Transcript(player.name) : ""
-                }
-                ${team.losers ? "(L)" : ""}
-              </span>
-              `
-            );
+            DisplayName(t, team, player)
           } else {
             let teamName = "";
 
@@ -419,6 +411,275 @@ LoadEverything().then(() => {
         name_element.style.color = "rgb(18, 18, 18, 0.8)";
         inner_container.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
       }
+    }
+  }
+
+  /**
+   * Checks to see whether the properties and their values of obj1 are the same as those of obj2
+   * Created this function with the help of ChatGPT, modified to make it recursive and fit the need of the overlay.
+   * @param obj1 Object 1 to compare
+   * @param obj2 Object 2 to compare
+   * @returns boolean of whether the properties and their values of obj1 are the same as those of obj2
+   */
+  function compareObjects(obj1, obj2) {
+    // Get the property names of obj1
+    const obj1Keys = Object.keys(obj1).sort();
+
+    // Loop through the properties of obj1
+    for (let key of obj1Keys) {
+      if (key !== "character" && key !== "mains" && key !== "id" && key !== "mergedName" && key !== "mergedOnlyName") {
+        // Check if the property exists in obj2
+        if (!obj2.hasOwnProperty(key)) {
+          return false;
+        }
+        // Check if the values of the properties are the same
+        // Check to see if there is an object inside the object
+        if (typeof obj1[key] == "object" && obj1[key] && obj2[key]) {
+          // If an inner object of obj1 is not equal to the inner object of obj2, then we return false to avoid any more comparisons
+          if (!compareObjects(obj1[key], obj2[key])) return false;
+          // If the primitive types are not equal to each other, then we return false here as well
+        } else if (obj1[key] !== obj2[key]) {
+          return false;
+        }
+      }
+    }
+    // If all properties and their values are the same, return true
+    return true;
+  }
+
+  async function DisplayName(t, team, player) {
+    if (t == 0) {
+      player1 = player
+      team1Losers = team.losers
+    }
+
+    if (t == 1) {
+      player2 = player
+      team2Losers = team.losers
+    }
+
+    console.log("P1");
+    console.log(player1);
+    console.log("P2")
+    console.log(player2);
+    console.log("Player in Winners");
+    console.log(playerInWinners);
+    console.log("Comparing P1 to Winner: " + compareObjects(player1, playerInWinners));
+    console.log("Comparing P2 to Winner: " + compareObjects(player2, playerInWinners));
+
+
+      // If the player and the opponent are both in losers
+    if (team1Losers && team2Losers) {
+
+      // If P1 was in winners
+      if (compareObjects(player1, playerInWinners)) {
+
+        // P1 has (WL)
+        SetInnerHtml(
+          $(`.p1.container .name`),
+          `
+          <span>
+            <span class="sponsor">
+              ${player1.team ? player1.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+            </span>
+            ${
+              player1.name ? await Transcript(player1.name) : ""
+            }
+            ${"(WL)"}
+          </span>
+          `
+        );
+
+        // P2 has (L)
+        SetInnerHtml(
+          $(`.p2.container .name`),
+          `
+          <span>
+            <span class="sponsor">
+              ${player2.team ? player2.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+            </span>
+            ${
+              player2.name ? await Transcript(player2.name) : ""
+            }
+            ${"(L)"}
+          </span>
+          `
+        );
+
+      // If P2 was in winners
+      } else if (compareObjects(player2, playerInWinners)) { 
+
+        // P1 has (L)
+        SetInnerHtml(
+          $(`.p1.container .name`),
+          `
+          <span>
+            <span class="sponsor">
+              ${player1.team ? player1.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+            </span>
+            ${
+              player1.name ? await Transcript(player1.name) : ""
+            }
+            ${"(L)"}
+          </span>
+          `
+        );
+
+        // P2 has (WL)
+        SetInnerHtml(
+          $(`.p2.container .name`),
+          `
+          <span>
+            <span class="sponsor">
+              ${player2.team ? player2.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+            </span>
+            ${
+              player2.name ? await Transcript(player2.name) : ""
+            }
+            ${"(WL)"}
+          </span>
+          `
+        );
+
+      // If neither of them were in winners (which is unlikely but possible)
+      } else {
+
+        // P1 has (L)
+        SetInnerHtml(
+          $(`.p1.container .name`),
+          `
+          <span>
+            <span class="sponsor">
+              ${player1.team ? player1.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+            </span>
+            ${
+              player1.name ? await Transcript(player1.name) : ""
+            }
+            ${"(L)"}
+          </span>
+          `
+        );
+
+        // P2 has (WL)
+        SetInnerHtml(
+          $(`.p2.container .name`),
+          `
+          <span>
+            <span class="sponsor">
+              ${player2.team ? player2.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+            </span>
+            ${
+              player2.name ? await Transcript(player2.name) : ""
+            }
+            ${"(L)"}
+          </span>
+          `
+        );
+      }
+
+    } else if (team1Losers) { // P1 in losers, P2 in winners
+
+      // P1 has (L)
+      SetInnerHtml(
+        $('.p1.container .name'),
+        `
+        <span>
+          <span class="sponsor">
+            ${player1.team ? player1.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+          </span>
+          ${
+            player1.name ? await Transcript(player1.name) : ""
+          }
+          ${"(L)"}
+        </span>
+        `
+      );
+      
+      // P2 has (W)
+      SetInnerHtml(
+        $('.p2.container .name'),
+        `
+        <span>
+          <span class="sponsor">
+            ${player2.team ? player2.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+          </span>
+          ${
+            player2.name ? await Transcript(player2.name) : ""
+          }
+          ${"(W)"}
+        </span>
+        `
+      );
+
+      playerInWinners = player2;
+
+    } else if (team2Losers) {
+
+      // P1 has (W)
+      SetInnerHtml(
+        $('.p1.container .name'),
+        `
+        <span>
+          <span class="sponsor">
+            ${player1.team ? player1.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+          </span>
+          ${
+            player1.name ? await Transcript(player1.name) : ""
+          }
+          ${"(W)"}
+        </span>
+        `
+      );
+      
+      // P2 to has (L)
+      SetInnerHtml(
+        $('.p2.container .name'),
+        `
+        <span>
+          <span class="sponsor">
+            ${player2.team ? player2.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+          </span>
+          ${
+            player2.name ? await Transcript(player2.name) : ""
+          }
+          ${"(L)"}
+        </span>
+        `
+      );
+
+      playerInWinners = player1;
+
+    // Neither P1 nor P2 is in losers
+    } else {
+
+      SetInnerHtml(
+        $('.p1.container .name'),
+        `
+        <span>
+          <span class="sponsor">
+            ${player1.team ? player1.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+          </span>
+          ${
+            player1.name ? await Transcript(player1.name) : ""
+          }
+        </span>
+        `
+      );
+
+      SetInnerHtml(
+        $('.p2.container .name'),
+        `
+        <span>
+          <span class="sponsor">
+            ${player2.team ? player2.team.replace(/\s*[\|\/\\]\s*/g, ' '): ""}
+          </span>
+          ${
+            player2.name ? await Transcript(player2.name) : ""
+          }
+        </span>
+        `
+      );
+
     }
   }
 });
