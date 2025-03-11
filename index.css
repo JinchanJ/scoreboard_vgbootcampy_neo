@@ -182,17 +182,19 @@ body {
   margin-right: 12px;
 }
 
-.flag_dimension {
-  width: 44px;
-  height: 31px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
+.flags_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.shiny {
-  position: absolute;
-  background-image: url("shiny.png");
+.flag {
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 44px;
+  height: 44px;
 }
 
 .twitter_container {
@@ -233,7 +235,6 @@ body {
   background: white;
   width: 30px;
   height: 30px;
-  margin-right: 3px;
 }
 
 .p1 .twitter_logo {

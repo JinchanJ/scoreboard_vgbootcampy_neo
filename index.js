@@ -122,8 +122,7 @@ LoadEverything().then(() => {
           SetInnerHtml(
             $(`.p${t + 1}.container .flagcountry`),
             player.country.asset && Object.keys(team.player).length == 1
-              ? `<div class='flag flag_dimension' style="background-image: url('../../${player.country.asset.toLowerCase()}')"></div>
-              <div class='shiny flag_dimension'></div>`
+              ? `<div class='flag' style="background-image: url('${player.country.asset.toLowerCase()}')"></div>`
               : ""
           );
 
