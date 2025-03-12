@@ -421,7 +421,7 @@ LoadEverything().then(() => {
 
     // Loop through the properties of obj1
     for (let key of obj1Keys) {
-      if (key !== "character" && key !== "mains" && key !== "id" && key !== "mergedName" && key !== "mergedOnlyName") {
+      if (key !== "character" && key !== "mains" && key !== "id" && key !== "mergedName" && key !== "mergedOnlyName" && key != "seed" && key != "") {
         // Check if the property exists in obj2
         if (!obj2.hasOwnProperty(key)) {
           return false;
@@ -548,7 +548,7 @@ LoadEverything().then(() => {
           `
         );
 
-        // P2 has (WL)
+        // P2 has (L)
         SetInnerHtml(
           $(`.p2.container .name`),
           `
@@ -600,6 +600,7 @@ LoadEverything().then(() => {
       );
 
       if (t == 1) {
+        console.log("Saved P2 as Winner");
         const jsonString = JSON.stringify(player2);
         localStorage.setItem("playerInWinners", jsonString);
       }
@@ -638,6 +639,7 @@ LoadEverything().then(() => {
         `
       );
 
+      console.log("Saved P1 as Winner");
       if (t == 1) {
         const jsonString = JSON.stringify(player1);
         localStorage.setItem("playerInWinners", jsonString);
