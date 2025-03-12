@@ -12,9 +12,12 @@ LoadEverything().then(() => {
   let savedMatch = "";
   let firstTime = true;
   let intervalID = "";
-  let playerInWinners = "";
   let player1 = "";
   let player2 = "";
+  let team1Name = "";
+  let team2Name = "";
+  let teamNameInWinners = localStorage.getItem("teamNameInWinners");
+  if (!teamNameInWinners) teamNameInWinners = "";
   let team1Losers = false;
   let team2Losers = false;
 
@@ -97,16 +100,7 @@ LoadEverything().then(() => {
             } else {
               teamName = team.teamName;
             }
-
-            SetInnerHtml(
-              $(`.p${t + 1}.container .name`),
-              `
-              <span>
-                ${teamName}
-                ${team.losers ? "(L)" : ""}
-              </span>
-              `
-            );
+            DisplayTeamName(t, team, teamName);
           }
 
           SetInnerHtml($(`.p${t + 1} .score`), String(team.score));
@@ -448,6 +442,10 @@ LoadEverything().then(() => {
   }
 
   async function DisplayName(t, team, player) {
+
+    const retrievedJsonString = localStorage.getItem("playerInWinners");
+    const playerInWinners = JSON.parse(retrievedJsonString);
+
     if (t == 0) {
       player1 = player
       team1Losers = team.losers
@@ -611,9 +609,15 @@ LoadEverything().then(() => {
         `
       );
 
-      playerInWinners = player2;
+      if (t == 1) {
+        console.log("Setting P2 as Winners");
+        const jsonString = JSON.stringify(player2);
+        localStorage.setItem("playerInWinners", jsonString);
+      }
 
     } else if (team2Losers) {
+
+      console.log("This route was taken.");
 
       // P1 has (W)
       SetInnerHtml(
@@ -647,7 +651,11 @@ LoadEverything().then(() => {
         `
       );
 
-      playerInWinners = player1;
+      if (t == 1) {
+        console.log("Setting P1 as Winners");
+        const jsonString = JSON.stringify(player1);
+        localStorage.setItem("playerInWinners", jsonString);
+      }
 
     // Neither P1 nor P2 is in losers
     } else {
@@ -676,6 +684,179 @@ LoadEverything().then(() => {
           ${
             player2.name ? await Transcript(player2.name) : ""
           }
+        </span>
+        `
+      );
+
+    }
+  }
+
+  async function DisplayTeamName(t, team, teamName) {
+
+    const teamNameInWinners = localStorage.getItem("teamNameInWinners");
+
+    if (t == 0) {
+      team1Name = teamName;
+      team1Losers = team.losers
+    }
+
+    if (t == 1) {
+      team2Name = teamName;
+      team2Losers = team.losers
+    }
+
+      // If the player and the opponent are both in losers
+    if (team1Losers && team2Losers) {
+
+      // If Team 1 was in winners
+      if (team1Name == teamNameInWinners) {
+
+        // Team 1 has (WL)
+        SetInnerHtml(
+          $(`.p1.container .name`),
+          `
+          <span>
+            ${team1Name}
+            ${"(WL)"}
+          </span>
+          `
+        );
+
+        // Team 2 has (L)
+        SetInnerHtml(
+          $(`.p2.container .name`),
+          `
+          <span>
+            ${team2Name}
+            ${"(L)"}
+          </span>
+          `
+        );
+
+      // If Team 2 was in winners
+      } else if (team2Name == teamNameInWinners) { 
+
+        // Team 1 has (L)
+        SetInnerHtml(
+          $(`.p1.container .name`),
+          `
+          <span>
+            ${team1Name}
+            ${"(L)"}
+          </span>
+          `
+        );
+
+        // Team 2 has (WL)
+        SetInnerHtml(
+          $(`.p2.container .name`),
+          `
+          <span>
+            ${team2Name}
+            ${"(WL)"}
+          </span>
+          `
+        );
+
+      // If neither of them were in winners (which is unlikely but possible)
+      } else {
+
+        // Team 1 has (L)
+        SetInnerHtml(
+          $(`.p1.container .name`),
+          `
+          <span>
+            ${team1Name}
+            ${"(L)"}
+          </span>
+          `
+        );
+
+        // Team 2 has (L)
+        SetInnerHtml(
+          $(`.p2.container .name`),
+          `
+          <span>
+            ${team2Name}
+            ${"(L)"}
+          </span>
+          `
+        );
+      }
+
+    } else if (team1Losers) { // Team 1 in losers, Team 2 in winners
+
+      // Team 1 has (L)
+      SetInnerHtml(
+        $(`.p1.container .name`),
+        `
+        <span>
+          ${team1Name}
+          ${"(L)"}
+        </span>
+        `
+      );
+
+      // Team 2 has (W)
+      SetInnerHtml(
+        $(`.p2.container .name`),
+        `
+        <span>
+          ${team2Name}
+          ${"(W)"}
+        </span>
+        `
+      );
+
+      if (t == 1) {
+        localStorage.setItem("teamNameInWinners", team2Name);
+      }
+
+    } else if (team2Losers) {
+
+      // Team 1 has (W)
+      SetInnerHtml(
+        $(`.p1.container .name`),
+        `
+        <span>
+          ${team1Name}
+          ${"(W)"}
+        </span>
+        `
+      );
+
+      // Team 2 has (L)
+      SetInnerHtml(
+        $(`.p2.container .name`),
+        `
+        <span>
+          ${team2Name}
+          ${"(L)"}
+        </span>
+        `
+      );
+
+      if (t == 1) {
+        localStorage.setItem("teamNameInWinners", team1Name);
+      }
+
+    // Neither P1 nor P2 is in losers
+    } else {
+
+      SetInnerHtml(
+        $(`.p1.container .name`),
+        `
+        <span>
+          ${team1Name}
+        </span>
+        `
+      );
+
+      SetInnerHtml(
+        $(`.p2.container .name`),
+        `
+        <span>
+          ${team2Name}
         </span>
         `
       );
