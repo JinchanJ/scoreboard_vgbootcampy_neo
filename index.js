@@ -408,37 +408,6 @@ LoadEverything().then(() => {
     }
   }
 
-  function getObjectDifference(obj1, obj2) {
-    let diff = {};
-
-    function findDifferences(o1, o2, path = "") {
-        if (typeof o1 !== "object" || o1 === null) o1 = {}; // Ensure o1 is an object
-        if (typeof o2 !== "object" || o2 === null) o2 = {}; // Ensure o2 is an object
-
-        const keys = new Set([...Object.keys(o1), ...Object.keys(o2)]); // Get all keys from both objects
-
-        for (let key of keys) {
-            let fullPath = path ? `${path}.${key}` : key;
-
-            if (!o2.hasOwnProperty(key)) {
-                diff[fullPath] = { type: "removed", value: o1[key] };
-            } else if (!o1.hasOwnProperty(key)) {
-                diff[fullPath] = { type: "added", value: o2[key] };
-            } else if (
-                typeof o1[key] === "object" && o1[key] !== null &&
-                typeof o2[key] === "object" && o2[key] !== null
-            ) {
-                findDifferences(o1[key], o2[key], fullPath);
-            } else if (o1[key] !== o2[key]) {
-                diff[fullPath] = { type: "changed", oldValue: o1[key], newValue: o2[key] };
-            }
-        }
-    }
-
-    findDifferences(obj1, obj2);
-    return diff;
-  }
-
   /**
    * Checks to see whether the properties and their values of obj1 are the same as those of obj2
    * Created this function with the help of ChatGPT, modified to make it recursive and fit the need of the overlay.
@@ -485,21 +454,6 @@ LoadEverything().then(() => {
     if (t == 1) {
       player2 = player
       team2Losers = team.losers
-    }
-
-    console.log("The value of t is: " + t);
-    console.log("P1")
-    console.log(player1);
-    console.log("P2");
-    console.log(player2);
-    console.log("playerInWinners");
-    console.log(playerInWinners);
-
-    if (playerInWinners) {
-      console.log("P1 Difference w/ Winner");
-      console.log(getObjectDifference(playerInWinners, player1));
-      console.log("P2 Difference w/ Winner");
-      console.log(getObjectDifference(playerInWinners, player2));
     }
 
       // If the player and the opponent are both in losers
