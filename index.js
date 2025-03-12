@@ -600,7 +600,6 @@ LoadEverything().then(() => {
       );
 
       if (t == 1) {
-        console.log("Saved P2 as Winner");
         const jsonString = JSON.stringify(player2);
         localStorage.setItem("playerInWinners", jsonString);
       }
@@ -639,7 +638,6 @@ LoadEverything().then(() => {
         `
       );
 
-      console.log("Saved P1 as Winner");
       if (t == 1) {
         const jsonString = JSON.stringify(player1);
         localStorage.setItem("playerInWinners", jsonString);
