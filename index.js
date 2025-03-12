@@ -16,8 +16,6 @@ LoadEverything().then(() => {
   let player2 = "";
   let team1Name = "";
   let team2Name = "";
-  let teamNameInWinners = localStorage.getItem("teamNameInWinners");
-  if (!teamNameInWinners) teamNameInWinners = "";
   let team1Losers = false;
   let team2Losers = false;
 
