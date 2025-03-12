@@ -456,16 +456,6 @@ LoadEverything().then(() => {
       team2Losers = team.losers
     }
 
-    console.log("P1");
-    console.log(player1);
-    console.log("P2")
-    console.log(player2);
-    console.log("Player in Winners");
-    console.log(playerInWinners);
-    console.log("Comparing P1 to Winner: " + compareObjects(player1, playerInWinners));
-    console.log("Comparing P2 to Winner: " + compareObjects(player2, playerInWinners));
-
-
       // If the player and the opponent are both in losers
     if (team1Losers && team2Losers) {
 
@@ -610,14 +600,11 @@ LoadEverything().then(() => {
       );
 
       if (t == 1) {
-        console.log("Setting P2 as Winners");
         const jsonString = JSON.stringify(player2);
         localStorage.setItem("playerInWinners", jsonString);
       }
 
     } else if (team2Losers) {
-
-      console.log("This route was taken.");
 
       // P1 has (W)
       SetInnerHtml(
@@ -652,7 +639,6 @@ LoadEverything().then(() => {
       );
 
       if (t == 1) {
-        console.log("Setting P1 as Winners");
         const jsonString = JSON.stringify(player1);
         localStorage.setItem("playerInWinners", jsonString);
       }
