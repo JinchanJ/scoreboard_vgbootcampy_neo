@@ -110,9 +110,6 @@ LoadEverything().then(() => {
               : ""
           );
 
-          console.log("hello there");
-          // console.log(`${player.country.asset.toLowerCase()}`);
-
           DisplaySponsorLogo(t, player, team);
           
         }
